@@ -1,21 +1,12 @@
-const body = $response.body;
-let obj;
+var obj = JSON.parse($response.body);
 
-try {
-    obj = JSON.parse(body);
-} catch (e) {
-    // Remove error handling for now
-    $done({body}); // If parsing fails, return the original body
-    return;
-}
+obj = {
+  "device_id": "12345678901234567890",
+  "device_id_str": "12345678901234567890",
+  "install_id": "12345678901234567890",
+  "install_id_str": "12345678901234567890",
+  "new_user": 1,
+  "server_time": 9999999999
+};
 
-// Modify the JSON response values
-obj.device_id = "12345678901234567890"; // New device_id value
-obj.device_id_str = "12345678901234567890"; // New device_id_str value
-obj.install_id = "12345678901234567890"; // New install_id value
-obj.install_id_str = "12345678901234567890"; // New install_id_str value
-obj.new_user = 1; // New new_user value
-obj.server_time = 9999999999; // New server_time value
-
-// Return the modified response
 $done({body: JSON.stringify(obj)});
