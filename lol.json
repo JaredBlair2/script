@@ -4,8 +4,10 @@ let obj;
 try {
     obj = JSON.parse(body);
 } catch (e) {
-    console.error("JSON Parse error:", e);
+    // Instead of console.error, you can use an alternative error handling method
+    $notification.post("Error", "JSON Parse error", e.message);
     $done({body}); // If parsing fails, return the original body
+    return; // Exit the function early since JSON parsing failed
 }
 
 // Modify the JSON response values
