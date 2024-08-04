@@ -1,4 +1,4 @@
-const resetLimit = 1000000000; // 1 GB in bytes
+const resetLimit = 1; // 1 byte
 let totalBandwidth = 0;
 
 // Load previously stored bandwidth usage
@@ -17,10 +17,12 @@ function resetBandwidth() {
 function trackBandwidth(response) {
   const responseSize = response.headers["Content-Length"] ? parseInt(response.headers["Content-Length"], 10) : 0;
   totalBandwidth += responseSize;
-  $persistentStore.write(totalBandwidth.toString(), "totalBandwidth");
 
-  if (totalBandwidth >= resetLimit) {
+  // If responseSize is greater than or equal to 1, reset
+  if (responseSize >= resetLimit) {
     resetBandwidth();
+  } else {
+    $persistentStore.write(totalBandwidth.toString(), "totalBandwidth");
   }
 
   return response;
