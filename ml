@@ -16,7 +16,3 @@ startNotificationLoop();
 
 // Complete the initial request (the script will keep running due to the interval)
 $done({});
-
-
-
-how about it only execute when this url appear https://gsp-ssl.ls.apple.com/dispatcher.arpc
