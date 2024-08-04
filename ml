@@ -1,8 +1,8 @@
-const message = 'TCP connection made to 156.59.200.90.';
+const message = 'Scheduled task executed.';
 
 // Function to display a notification
 function showNotification(message) {
-  $notification.post('TCP Connection Alert', '', message);
+  $notification.post('Cron Job Alert', '', message);
 }
 
 // Display the notification
