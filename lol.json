@@ -1,12 +1,31 @@
-var obj = JSON.parse($response.body);
+let totalBandwidth = 0;
+const resetCondition = 1000000000; // 1 GB for example
 
-obj = {
-  "device_id": "12345678901234567890",
-  "device_id_str": "12345678901234567890",
-  "install_id": "12345678901234567890",
-  "install_id_str": "12345678901234567890",
-  "new_user": 1,
-  "server_time": 9999999999
-};
+// Load the previous bandwidth usage if stored
+if ($persistentStore.read("totalBandwidth")) {
+  totalBandwidth = parseInt($persistentStore.read("totalBandwidth"));
+}
 
-$done({body: JSON.stringify(obj)});
+// Function to reset bandwidth
+function resetBandwidth() {
+  totalBandwidth = 0;
+  $persistentStore.write("0", "totalBandwidth");
+  $notification.post("Bandwidth Reset", "Bandwidth usage has been reset.", "");
+}
+
+// Main script
+$httpClient.get($request.url, function(error, response, data) {
+  if (error) {
+    $done();
+  } else {
+    const responseSize = response.headers["Content-Length"] ? parseInt(response.headers["Content-Length"]) : 0;
+    totalBandwidth += responseSize;
+    $persistentStore.write(totalBandwidth.toString(), "totalBandwidth");
+
+    if (totalBandwidth >= resetCondition) {
+      resetBandwidth();
+    }
+
+    $done({response: {status: response.status, headers: response.headers, body: data}});
+  }
+});
