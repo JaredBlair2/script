@@ -1,9 +1,9 @@
+const resetLimit = 1000000000; // 1 GB in bytes
 let totalBandwidth = 0;
-const resetCondition = 1000000000; // 1 GB for example
 
-// Load the previous bandwidth usage if stored
+// Load previously stored bandwidth usage
 if ($persistentStore.read("totalBandwidth")) {
-  totalBandwidth = parseInt($persistentStore.read("totalBandwidth"));
+  totalBandwidth = parseInt($persistentStore.read("totalBandwidth"), 10);
 }
 
 // Function to reset bandwidth
@@ -13,19 +13,29 @@ function resetBandwidth() {
   $notification.post("Bandwidth Reset", "Bandwidth usage has been reset.", "");
 }
 
-// Main script
-$httpClient.get($request.url, function(error, response, data) {
-  if (error) {
-    $done();
-  } else {
-    const responseSize = response.headers["Content-Length"] ? parseInt(response.headers["Content-Length"]) : 0;
-    totalBandwidth += responseSize;
-    $persistentStore.write(totalBandwidth.toString(), "totalBandwidth");
+// Function to track bandwidth
+function trackBandwidth(response) {
+  const responseSize = response.headers["Content-Length"] ? parseInt(response.headers["Content-Length"], 10) : 0;
+  totalBandwidth += responseSize;
+  $persistentStore.write(totalBandwidth.toString(), "totalBandwidth");
 
-    if (totalBandwidth >= resetCondition) {
-      resetBandwidth();
-    }
-
-    $done({response: {status: response.status, headers: response.headers, body: data}});
+  if (totalBandwidth >= resetLimit) {
+    resetBandwidth();
   }
-});
+
+  return response;
+}
+
+// Monitor HTTP responses
+function handleResponse(request) {
+  $httpClient.get(request.url, function(error, response, data) {
+    if (error) {
+      $done();
+    } else {
+      response = trackBandwidth(response);
+      $done({response: {status: response.status, headers: response.headers, body: data}});
+    }
+  });
+}
+
+handleResponse($request);
