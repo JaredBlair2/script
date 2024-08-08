@@ -1,10 +1,10 @@
 var obj = JSON.parse($response.body);
 
 obj = {
-  "server_time": 1723097080,
+  "server_time": 0,
   "device_id": 5234178250146687123,
   "install_id": 8912356482135789432,
-  "new_user": 0,
+  "new_user": 1,
   "device_id_str": "5234178250146687123",
   "install_id_str": "8912356482135789432"
 };
