@@ -1,43 +1,8 @@
-const resetLimit = 1; // 1 byte
-let totalBandwidth = 0;
-
-// Load previously stored bandwidth usage
-if ($persistentStore.read("totalBandwidth")) {
-  totalBandwidth = parseInt($persistentStore.read("totalBandwidth"), 10);
+{
+  "server_time": 1723097080,
+  "device_id": 5234178250146687123,
+  "install_id": 8912356482135789432,
+  "new_user": 0,
+  "device_id_str": "5234178250146687123",
+  "install_id_str": "8912356482135789432"
 }
-
-// Function to reset bandwidth
-function resetBandwidth() {
-  totalBandwidth = 0;
-  $persistentStore.write("0", "totalBandwidth");
-  $notification.post("Bandwidth Reset", "Bandwidth usage has been reset.", "");
-}
-
-// Function to track bandwidth
-function trackBandwidth(response) {
-  const responseSize = response.headers["Content-Length"] ? parseInt(response.headers["Content-Length"], 10) : 0;
-  totalBandwidth += responseSize;
-
-  // If responseSize is greater than or equal to 1, reset
-  if (responseSize >= resetLimit) {
-    resetBandwidth();
-  } else {
-    $persistentStore.write(totalBandwidth.toString(), "totalBandwidth");
-  }
-
-  return response;
-}
-
-// Monitor HTTP responses
-function handleResponse(request) {
-  $httpClient.get(request.url, function(error, response, data) {
-    if (error) {
-      $done();
-    } else {
-      response = trackBandwidth(response);
-      $done({response: {status: response.status, headers: response.headers, body: data}});
-    }
-  });
-}
-
-handleResponse($request);
