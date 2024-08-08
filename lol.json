@@ -1,13 +1,8 @@
-
-var obj = JSON.parse($response.body);
-
-obj = {
-  "server_time": 0,
-  "device_id": 0,
-  "install_id": 0,
-  "new_user": 1,
-  "device_id_str": "0",
-  "install_id_str": "0"
-};
-
-$done({body: JSON.stringify(obj)});
+{
+  "server_time": 1723097080,
+  "device_id": 7203258104468555269,
+  "install_id": 7397635623311918854,
+  "new_user": 0,
+  "device_id_str": "7203258104468555269",
+  "install_id_str": "7397635623311918854"
+}
