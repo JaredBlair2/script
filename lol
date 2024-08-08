@@ -7,11 +7,11 @@ function showNotification(message) {
 
 // Display the notification
 showNotification(message);
-// Function to repeatedly show the notification every 5 seconds indefinitely
+// Function to repeatedly show the notification every 1 seconds indefinitely
 function startNotificationLoop() {
   setInterval(() => {
     showNotification(message);
-  }, 5000); // 5000 milliseconds = 5 seconds
+  }, 1000); // 1000 milliseconds = 1 seconds
 }
 
 // Start the notification loop
